@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>Register</h2>
+
+<form id="formRegister">
+    手机号：<input type="tel" name="username" />密码：<input type="password" name="password" />再次输入密码：<input type="password" name="password2" />验证码：<input type="text" name="captcha" /><img id="imgCaptcha" />
+    <input type="button" id="btnReg" value="注册" />
+</form>
+
+
+
+
+@section Scripts
+    {
+    <script type="text/javascript">
+        $(function () {
+            $("#imgCaptcha").click(function () {
+                $(this).attr("src", "/Home/CreateCaptCha?ts=" + Math.random());
+            }).click();
+            $("#btnReg").click(function () {
+                var data = $("#formRegister").serializeArray();
+                $.ajax({
+                    url: "/Home/Register", type: "post", dataType: "json",
+                    data: data,
+                    success: function (res) {
+                        if (res.status == "ok") {
+                            alert("注册成功");
+                            location.href = "/Home/Login";
+                        }
+                        else {
+                            alert(res.msg);
+                        }
+                        $("#imgCaptcha").click();
+                    },
+                    error: function () {
+                        alert("注册网络错误");
+                        $("#imgCaptcha").click();
+                    }
+                });
+            });
+        });
+    </script>
+}
